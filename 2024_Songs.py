@@ -187,7 +187,7 @@ with classification:
 with hypothesis:
     st.write("Below is the way I investigated the distribution of page views across all the artists in the data.")
     # --- 5. Top N Artist Total Pageview Analysis (No monthly filter here, as it's *total accumulated* views) ---
-    st.header("2. Top N Artist Total Accumulated Pageview Analysis (All Months)")
+    st.header("Top N Artist Total Accumulated Pageview Analysis (All Months)")
     st.write("This section aggregates the pageviews across **all months and all songs** for each artist in the dataset to determine who had the highest **total accumulated pageviews** across the year.")
 
 
@@ -241,7 +241,7 @@ with hypothesis:
 with visuals:
 
     # --- 3. Song Leaderboard Controls ---
-    st.header("1. Top N Song Leaderboard")
+    st.header("Top N Song Leaderboard")
     st.markdown("Adjust the controls below to customize the top songs visualization, including selecting a month.")
 
     # Get unique months for selection
