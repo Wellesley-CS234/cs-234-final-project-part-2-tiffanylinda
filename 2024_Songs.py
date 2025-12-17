@@ -423,11 +423,11 @@ with visuals:
     # --- TOTAL ACCUMULATION SECTION ---
     st.write("## 🏆 Overall Top Songs")
 
-    # 1. Aggregate and Calculate Percentages
-    df_total_stats = data.groupby('article')['monthly_pageviews'].sum().reset_index()
+    # 1. Aggregate by BOTH Article and Artist
+    df_total_stats = data.groupby(['article', 'artist'])['monthly_pageviews'].sum().reset_index()
     df_total_stats.rename(columns={'monthly_pageviews': 'total_pageviews'}, inplace=True)
 
-    # Calculate the % share of total traffic for each song
+    # Calculate the % share
     total_site_views = df_total_stats['total_pageviews'].sum()
     df_total_stats['percent_share'] = (df_total_stats['total_pageviews'] / total_site_views) * 100
 
@@ -450,7 +450,7 @@ with visuals:
             key='total_sort_final'
         )
 
-    # 3. Sorting Logic (Highest Views always stay on top unless A-Z is chosen)
+    # 3. Sorting Logic
     if total_sort == 'Song Name (A-Z)':
         df_display_total = df_total_stats.nlargest(total_n, 'total_pageviews').sort_values('article')
         y_sort_acc = None
@@ -458,14 +458,15 @@ with visuals:
         df_display_total = df_total_stats.nlargest(total_n, 'total_pageviews')
         y_sort_acc = alt.EncodingSortField(field="total_pageviews", order='descending')
 
-    # 4. Visualization
+    # 4. Visualization 
     chart_total = alt.Chart(df_display_total).mark_bar(color='#29b5e8').encode(
         y=alt.Y('article:N', sort=y_sort_acc, title=None),
         x=alt.X('total_pageviews:Q', title='Total Accumulated Pageviews', axis=alt.Axis(format='~s')),
         tooltip=[
             alt.Tooltip('article', title='Song'),
+            alt.Tooltip('artist', title='Artist'), # <--- Added Artist to chart hover
             alt.Tooltip('total_pageviews', title='Total Views', format=','),
-            alt.Tooltip('percent_share', title='% of Total Traffic', format='.2f') # Added percentage to tooltip
+            alt.Tooltip('percent_share', title='% of Total Traffic', format='.2f')
         ]
     ).properties(
         title="Cumulative Song Performance",
@@ -474,17 +475,18 @@ with visuals:
 
     st.altair_chart(chart_total, use_container_width=True)
 
-    # 5. Raw Data with Percentage formatting
+    # 5. Raw Data 
     st.write("### Data Summary")
     st.dataframe(
         df_display_total.rename(columns={
             'article': 'Song Name', 
+            'artist': 'Artist', 
             'total_pageviews': 'Total Views',
             'percent_share': '% Share'
         }),
         use_container_width=True,
         column_config={
-            "% Share": st.column_config.NumberColumn(format="%.2f%%") # Formats as 5.25%
+            "% Share": st.column_config.NumberColumn(format="%.2f%%")
         }
     )
 
@@ -504,6 +506,15 @@ with summary:
              9. Billie Eilish
              10. Usher
     The top songs of 2024 are:
+            1. Clara Bow
+            2. The Twelve Days of Christmas
+            3. American Pie
+            4. Hallelujah
+            5. Yeah!
+            6. Espresso
+            7. Apt.
+            8. Zombie
+            9. Texas Hold'Em
              
     These Top 10 Artists Account for 14.88 percent of the total accumulated pageviews.
     
