@@ -240,6 +240,10 @@ with hypothesis:
     jump_point = artist_summary_analysis[artist_summary_analysis['pct_drop'] >= JUMP_THRESHOLD_PCT].head(1)
 
     # 2c. Display the Jump Detection Result
+    # Initialize a safe default value for the jump artist
+    jump_artist = "" 
+    jump_index = -1
+
     if not jump_point.empty:
         jump_artist = jump_point['artist'].iloc[0]
         jump_percentage = jump_point['pct_drop'].iloc[0]
@@ -255,7 +259,7 @@ with hypothesis:
         jump_index = artist_summary[artist_summary['artist'] == jump_artist].index[0]
     else:
         st.info("No significant 'big jump' (a drop greater than 60%) was detected between sequential artists.")
-        jump_index = -1
+        # jump_artist remains "" and jump_index remains -1, which is safe.
 
     # 3. Calculate Grand Total and Percentage Metrics
     grand_total_pageviews = artist_summary['total_pageviews'].sum()
@@ -288,10 +292,10 @@ with hypothesis:
 
     # Add a marker for the jump index if it's within the selected Top N
     color_condition = alt.condition(
-        # Check if the artist's rank (index + 1) is equal to the jump point rank
-        alt.datum.artist == jump_artist, 
-        alt.value('red'), # Color the bar red if it's the jump artist
-        alt.value('#E91E63') # Otherwise use the default pink color
+    # This check is now safe because jump_artist is guaranteed to be a string ("" if not found)
+    alt.datum.artist == jump_artist, 
+    alt.value('red'), # Color the bar red if it's the jump artist
+    alt.value('#E91E63') # Otherwise use the default pink color
     )
 
     chart_artists = alt.Chart(df_top_artists).mark_bar().encode(
