@@ -531,6 +531,68 @@ with visuals:
 
     st.plotly_chart(fig_scatter, use_container_width=True)
 
+    
+    # Last visual:
+    st.write("## 🔍 Custom Song Comparison & Trends")
+
+    # 1. Setup the Selection Controls
+    col_select, col_slider = st.columns([2, 1])
+
+    # Get all unique songs for the multiselect
+    all_songs = sorted(data['article'].unique())
+
+    with col_select:
+        # Search and select specific songs
+        selected_songs = st.multiselect(
+            "Choose specific songs to compare:",
+            options=all_songs,
+            default=df_total_stats.nlargest(3, 'total_pageviews')['article'].tolist(), # Default to look at Top 3
+            key='comparison_multiselect'
+        )
+
+    with col_slider:
+        # A slider so user can select number of songs
+        top_n_to_add = st.slider(
+            "Or add the Top N songs:",
+            min_value=0,
+            max_value=20,
+            value=0,
+            key='top_n_trend_slider'
+        )
+
+    # 2. Combine the logic
+    if top_n_to_add > 0:
+        top_songs = df_total_stats.nlargest(top_n_to_add, 'total_pageviews')['article'].tolist()
+        # Using set() to ensure we don't have duplicate song names
+        final_song_list = list(set(selected_songs + top_songs))
+    else:
+        final_song_list = selected_songs
+
+    # 3. Filter and Plot
+    if not final_song_list:
+        st.warning("Please select at least one song to see the trend.")
+    else:
+        # Filter original data based on the chosen list
+        df_trends = data[data['article'].isin(final_song_list)]
+        
+        # Create the Line Chart
+        fig_trends = px.line(
+            df_trends,
+            x='month',
+            y='monthly_pageviews',
+            color='article',
+            markers=True,
+            title="Monthly View Trends: Comparison",
+            labels={'monthly_pageviews': 'Views', 'month': 'Month'}
+        )
+        
+        fig_trends.update_layout(
+            hovermode="x unified",
+            xaxis={'categoryorder':'category ascending'} # Ensures Jan comes before Feb
+        )
+        
+        st.plotly_chart(fig_trends, use_container_width=True)
+
 
 with summary:
     st.header("Summary & Ethical Considerations ")
