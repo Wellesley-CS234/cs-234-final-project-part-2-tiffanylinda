@@ -493,47 +493,52 @@ with visuals:
 
 with summary:
     st.header("Summary & Ethical Considerations ")
+    
+    col7, col8 = st.columns(2)
+
+    with col7:
+        st.markdown("""
+        The key takeaways from my investigation show that the top artists are: 
+        1. Taylor Swift
+        2. The Beatles
+        3. Eminem
+        4. Sabrina Carpenter
+        5. Fleetwood Mac
+        6. Kendrick Lamar
+        7. Connie Francis
+        8. Beyonce
+        9. Billie Eilish
+        10. Usher
+        """)
+    with col8:    
+        st.markdown("""
+        The top songs of 2024 are:
+        1. Clara Bow
+        2. The Twelve Days of Christmas
+        3. American Pie
+        4. Hallelujah
+        5. Yeah!
+        6. Espresso
+        7. Zombie
+        8. Texas Hold'Em
+        9. Y.M.C.A.
+        10. Houdini
+        """)         
     st.markdown("""
-    The key takeaways from my investigation show that the top artists are: 
-    1. Taylor Swift
-    2. The Beatles
-    3. Eminem
-    4. Sabrina Carpenter
-    5. Fleetwood Mac
-    6. Kendrick Lamar
-    7. Connie Francis
-    8. Beyonce
-    9. Billie Eilish
-    10. Usher
-    The top songs of 2024 are:
-    1. Clara Bow
-    2. The Twelve Days of Christmas
-    3. American Pie
-    4. Hallelujah
-    5. Yeah!
-    6. Espresso
-    7. Zombie
-    8. Texas Hold'Em
-    9. Y.M.C.A.
-    10. Houdini
-    """)         
-    st.write("""
-            These Top 10 Artists Account for 14.88 percent of the total accumulated pageviews.
+    These Top 10 Artists Account for **14.88** percent of the total accumulated pageviews.
     
     The most interesting find is the big drop between Taylor Swift and the next person.
     
-    Taylor makes up 3.89 percent of the total accumulated pageviews in 2024. 
+    Taylor makes up **3.89** percent of the total accumulated pageviews in 2024. 
              
-    Therefore, that means that the rest of the artists make up 96.11 percent of the rest of the accumulated pageviews in 2024.
+    Therefore, that means that the rest of the artists make up **96.11** percent of the rest of the accumulated pageviews in 2024.
 
-    I'm fairly confident that the results are for the most part reliable because the processes I took in order to make sure the songs and QID were properly processed.
-    This also makes sense because in recent times, pop artists especially Taylor Swift have been dominating the music industry. 
+    I'm fairly confident that the results are for the most part reliable because in recent times pop artists, especially Taylor Swift, have been dominating the music industry. 
 
     I used zero-shot classification, but was not able to assess the model's accuracy as I did not have ground truth data.
-    One possible path I could do moving foward is using the lyric data to predict genre because I have ground truth for genre.
 
     There isn't any major ethical concerns as the data was collected from public sources. 
 
-    I find that my results do expose a bias towards popular artists dominating 2024. 
+    My results show that there isn't as big of a bias towards more popular artists in the music industry as I expected. 
 
     """)
