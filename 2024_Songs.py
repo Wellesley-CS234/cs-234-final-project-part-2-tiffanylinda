@@ -495,41 +495,39 @@ with visuals:
     st.markdown("---")
     st.subheader("🎯 Viral Hits vs. Steady Favorites")
 
-    # 1. Using 'df_total_stats' created in the previous step
-    # Getting the peak monthly views
+    # 1. Aggregate data (Removed 'genre' and 'qid' to keep it simple)
+    df_total_stats = data.groupby(['article', 'artist']).agg({
+        'monthly_pageviews': 'sum'
+    }).reset_index()
+    df_total_stats.rename(columns={'monthly_pageviews': 'total_pageviews'}, inplace=True)
+
+    # 2. Get the Peak Monthly views
     peak_monthly = data.groupby('article')['monthly_pageviews'].max().reset_index()
     peak_monthly.rename(columns={'monthly_pageviews': 'peak_month_views'}, inplace=True)
 
-    # Merge the peak data with our total stats
+    # 3. Merge 
     df_scatter = pd.merge(df_total_stats, peak_monthly, on='article')
 
-    # 2. Create the Plotly Scatter Plot
+    # 4. Visualization 
     fig_scatter = px.scatter(
         df_scatter, 
         x="total_pageviews", 
         y="peak_month_views",
-        color="genre",      # Color dots by Genre
         hover_name="article", 
         hover_data={
             "artist": True,
-            "genre": True,
             "total_pageviews": ":,",
             "peak_month_views": ":,"
         },
         title="Song Performance: Total Volume vs. Highest Monthly Spike",
         labels={
-            "total_pageviews": "Total Yearly Views (Longevity)",
-            "peak_month_views": "Highest Monthly Views (Peak Intensity)"
+            "total_pageviews": "Total Yearly Views",
+            "peak_month_views": "Highest Monthly Peak"
         }
     )
 
-    # 3. Styling the Plot
-    fig_scatter.update_traces(marker=dict(size=12, opacity=0.7, line=dict(width=1, color='White')))
-    fig_scatter.update_layout(
-        height=600,
-        hovermode="closest",
-        legend_title="Music Genre"
-    )
+    # Setting a single color for all dots 
+    fig_scatter.update_traces(marker=dict(size=12, color='#29b5e8', opacity=0.7))
 
     st.plotly_chart(fig_scatter, use_container_width=True)
 
