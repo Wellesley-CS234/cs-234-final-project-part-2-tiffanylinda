@@ -404,11 +404,27 @@ with visuals:
 
     # Create the Altair Bar Chart
     chart_leaderboard = alt.Chart(df_leaderboard).mark_bar().encode(
-        y=alt.Y('article', sort=y_sort_order, title=None), 
-        x=alt.X('monthly_pageviews', title='Monthly Pageviews', axis=alt.Axis(format='~s')), 
-        tooltip=['article', alt.Tooltip('monthly_pageviews', title='Monthly Pageviews')] 
+    y=alt.Y(
+        'article', 
+        sort=y_sort_order, 
+        title=None,
+        axis=alt.Axis(
+            # Splits the text into an array at every space, forcing a wrap
+            labelExpr="split(datum.label, ' ')", 
+            # Controls the max width of the label area before it truncates
+            labelLimit=200, 
+            # Adjusts spacing between the lines of the wrapped text
+            labelLineHeight=12,
+            # Ensures text stays aligned to the right near the axis line
+            labelAlign='right'
+        )
+    ), 
+    x=alt.X('monthly_pageviews', title='Monthly Pageviews', axis=alt.Axis(format='~s')), 
+    tooltip=['article', alt.Tooltip('monthly_pageviews', title='Monthly Pageviews')] 
     ).properties(
-        title=f"Top {leaderboard_count} Songs by Monthly Pageviews in {selected_month}"
+        title=f"Top {leaderboard_count} Songs by Monthly Pageviews in {selected_month}",
+        # increase height since wrapping makes it taller
+        height=alt.Step(40) 
     ).interactive()
 
     st.altair_chart(chart_leaderboard, use_container_width=True)
