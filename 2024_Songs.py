@@ -11,7 +11,7 @@ import numpy as np
 st.set_page_config(layout="wide", page_title="Song Pageview Leaderboard & Artist Analysis")
 data = pd.read_csv("song_st.csv")
 data2 =  pd.read_csv("main.csv")
-data3 = pd.read_csv("classification.csv")
+data3 = pd.read_csv("clean_classification.csv")
 
 # Creating tabs so that each section is organized
 
