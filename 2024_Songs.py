@@ -493,30 +493,32 @@ with visuals:
 
 with summary:
     st.header("Summary & Ethical Considerations ")
-    st.write("""
+    st.markdown("""
     The key takeaways from my investigation show that the top artists are: 
-             1. Taylor Swift
-             2. The Beatles
-             3. Eminem
-             4. Sabrina Carpenter
-             5. Fleetwood Mac
-             6. Kendrick Lamar
-             7. Connie Francis
-             8. Beyonce
-             9. Billie Eilish
-             10. Usher
+    1. Taylor Swift
+    2. The Beatles
+    3. Eminem
+    4. Sabrina Carpenter
+    5. Fleetwood Mac
+    6. Kendrick Lamar
+    7. Connie Francis
+    8. Beyonce
+    9. Billie Eilish
+    10. Usher
     The top songs of 2024 are:
-            1. Clara Bow
-            2. The Twelve Days of Christmas
-            3. American Pie
-            4. Hallelujah
-            5. Yeah!
-            6. Espresso
-            7. Apt.
-            8. Zombie
-            9. Texas Hold'Em
-             
-    These Top 10 Artists Account for 14.88 percent of the total accumulated pageviews.
+    1. Clara Bow
+    2. The Twelve Days of Christmas
+    3. American Pie
+    4. Hallelujah
+    5. Yeah!
+    6. Espresso
+    7. Zombie
+    8. Texas Hold'Em
+    9. Y.M.C.A.
+    10. Houdini
+    """)         
+    st.write("""
+            These Top 10 Artists Account for 14.88 percent of the total accumulated pageviews.
     
     The most interesting find is the big drop between Taylor Swift and the next person.
     
