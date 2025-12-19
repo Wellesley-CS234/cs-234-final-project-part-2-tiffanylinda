@@ -5,6 +5,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import numpy as np
+import plotly.express as px
 
 # --- 1. Load Data ---
 
@@ -344,7 +345,7 @@ with visuals:
 
     # Get unique months for selection
     # Sorts months and then reverses the order
-    unique_months = sorted(data['month'].unique(), reverse=True) 
+    unique_months = sorted(data['month'].unique(), reverse=False) 
 
     col_month, col_count, col_sort = st.columns([1, 1, 1])
 
@@ -490,6 +491,48 @@ with visuals:
         }
     )
 
+    # --- Visual 2: SCATTER PLOT  ---
+    st.markdown("---")
+    st.subheader("🎯 Viral Hits vs. Steady Favorites")
+
+    # 1. Using 'df_total_stats' created in the previous step
+    # Getting the peak monthly views
+    peak_monthly = data.groupby('article')['monthly_pageviews'].max().reset_index()
+    peak_monthly.rename(columns={'monthly_pageviews': 'peak_month_views'}, inplace=True)
+
+    # Merge the peak data with our total stats
+    df_scatter = pd.merge(df_total_stats, peak_monthly, on='article')
+
+    # 2. Create the Plotly Scatter Plot
+    fig_scatter = px.scatter(
+        df_scatter, 
+        x="total_pageviews", 
+        y="peak_month_views",
+        color="genre",      # Color dots by Genre
+        hover_name="article", 
+        hover_data={
+            "artist": True,
+            "genre": True,
+            "total_pageviews": ":,",
+            "peak_month_views": ":,"
+        },
+        title="Song Performance: Total Volume vs. Highest Monthly Spike",
+        labels={
+            "total_pageviews": "Total Yearly Views (Longevity)",
+            "peak_month_views": "Highest Monthly Views (Peak Intensity)"
+        }
+    )
+
+    # 3. Styling the Plot
+    fig_scatter.update_traces(marker=dict(size=12, opacity=0.7, line=dict(width=1, color='White')))
+    fig_scatter.update_layout(
+        height=600,
+        hovermode="closest",
+        legend_title="Music Genre"
+    )
+
+    st.plotly_chart(fig_scatter, use_container_width=True)
+
 
 with summary:
     st.header("Summary & Ethical Considerations ")
@@ -525,7 +568,7 @@ with summary:
         10. Houdini
         """)         
     st.markdown("""
-    These Top 10 Artists Account for **14.88** percent of the total accumulated pageviews.
+    These top 10 artists account for **14.88** percent of the total accumulated pageviews.
     
     The most interesting find is the big drop between Taylor Swift and the next person.
     
