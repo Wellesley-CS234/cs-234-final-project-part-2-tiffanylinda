@@ -409,22 +409,22 @@ with visuals:
         sort=y_sort_order, 
         title=None,
         axis=alt.Axis(
-            # Splits the text into an array at every space, forcing a wrap
+            # 1. Split on spaces for wrapping
             labelExpr="split(datum.label, ' ')", 
-            # Controls the max width of the label area before it truncates
-            labelLimit=200, 
-            # Adjusts spacing between the lines of the wrapped text
-            labelLineHeight=12,
-            # Ensures text stays aligned to the right near the axis line
-            labelAlign='right'
+            # 2. Increase this so it doesn't wrap every single word
+            labelLimit=150, 
+            # 3. Prevent Altair from hiding "crowded" labels
+            labelOverlap=False,
+            # 4. Optional: slanted text can also save vertical space
+            labelAngle=0 
         )
     ), 
     x=alt.X('monthly_pageviews', title='Monthly Pageviews', axis=alt.Axis(format='~s')), 
     tooltip=['article', alt.Tooltip('monthly_pageviews', title='Monthly Pageviews')] 
     ).properties(
-        title=f"Top {leaderboard_count} Songs by Monthly Pageviews in {selected_month}",
-        # increase height since wrapping makes it taller
-        height=alt.Step(40) 
+        title=f"Top {leaderboard_count} Songs",
+        # 5. This makes the chart "expand" to fit all labels
+        height=alt.Step(50) 
     ).interactive()
 
     st.altair_chart(chart_leaderboard, use_container_width=True)
